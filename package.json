@@ -25,7 +25,8 @@
   "homepage": "https://github.com/freaktechnik/discord-tex#readme",
   "dependencies": {
     "eris": "^0.6.0",
-    "mathjax-node-svg2png": "^1.0.2"
+    "mathjax-node": "^1.0.1",
+    "svg2png": "^4.1.1"
   },
   "engines": {
     "node": ">=7.9.0"

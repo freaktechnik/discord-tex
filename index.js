@@ -1,5 +1,6 @@
 const Eris = require("eris");
-const mj = require("mathjax-node-svg2png");
+const mj = require("mathjax-node");
+const svg2png = require("svg2png");
 
 console.log("Initializing Eris...");
 const bot = new Eris(process.env.DISCORD_TOKEN);
@@ -19,31 +20,31 @@ bot.on("ready", () => {
 let counter = 0;
 
 bot.on("messageCreate", (msg) => {
-    if(msg.content.startsWith("TeX:")) {
+    if(msg.content.search(/\$[^\$]+\$/) > -1) {
         bot.sendChannelTyping(msg.channel.id);
-        const math = msg.content.substr(4);
+        const math = msg.content;
         mj.typeset({
             math,
-            png: true,
-            ex: 20,
-            width: 200
+            svg: true,
+            format: "inline-TeX"
         }, (data) => {
-            if(!data.errors) {
+            if(!data.error) {
+                const buffer = Buffer.from(data.svg);
+                const file = svg2png.sync(buffer, {
+                    width: Math.floor(parseFloat(data.width) * 10),
+                    height: Math.floor(parseFloat(data.height) * 10)
+                });
                 bot.createMessage(msg.channel.id, {
-                    /*embed: {
-                        type: "rich",
+                    embed: {
                         title: math,
-                        image: {
-                            url: data.png
-                        },
                         author: {
                             name: msg.author.username,
                             icon_url: msg.author.avatarURL
                         }
-                    },*/
+                    },
                     tts: false
                 }, {
-                    file: Buffer.from(data.png.split(",")[1], 'base64'),
+                    file,
                     name: `tex${++counter}.png`
                 });
             }
