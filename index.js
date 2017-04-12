@@ -18,11 +18,14 @@ bot.on("messageCreate", (msg) => {
         }, (data) => {
             if(!data.errors) {
                 bot.createMessage(msg.channel.id, {
-                    content: "",
                     embed: {
                         type: "rich",
                         title: math,
-                        description: data.mml
+                        description: data.mml,
+                        author: {
+                            name: msg.author.username,
+                            icon_url: msg.author.avatarURL
+                        }
                     }
                 });
             }
@@ -31,7 +34,7 @@ bot.on("messageCreate", (msg) => {
                     content: `Errors occured while parsing the TeX expression "${math}"`,
                     embed: {
                         title: "Errors",
-                        color: "#ff0000",
+                        color: 0xff0000,
                         fields: data.erros.map((e) => {
                             return {
                                 name: "error",
@@ -43,4 +46,5 @@ bot.on("messageCreate", (msg) => {
             }
         })
     }
-})
+});
+bot.connect();
