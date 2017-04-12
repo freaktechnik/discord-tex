@@ -1,0 +1,32 @@
+{
+  "name": "discord-tex",
+  "version": "1.0.0",
+  "description": "Transforms TeX into something you can look at in discord",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/freaktechnik/discord-tex.git"
+  },
+  "keywords": [
+    "discord",
+    "tex",
+    "bot",
+    "latex"
+  ],
+  "author": "Martin Giger (https://humanoids.be)",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/freaktechnik/discord-tex/issues"
+  },
+  "homepage": "https://github.com/freaktechnik/discord-tex#readme",
+  "dependencies": {
+    "eris": "^0.6.0",
+    "mathjax-node": "^1.0.1"
+  },
+  "engines": {
+    "node": ">=7.9.0"
+  }
+}
