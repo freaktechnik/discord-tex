@@ -8,7 +8,22 @@ console.log("Configuring MathJax...");
 mj.config({
     displayMessages: false,
     displayErrors: false,
-    undefinedCharError: false
+    undefinedCharError: false,
+    MathJax: {
+        tex2jax: {
+            inlineMath: [['$', '$']],
+            displayMath: [['$$', '$$']],
+            balanceBraces: true,
+            processEscapes: true
+        },
+        SVG: {
+            styles: {
+                "svg": {
+                    background: "white"
+                }
+            }
+        }
+    }
 });
 console.log("Starting MathJax...");
 mj.start();
@@ -20,32 +35,41 @@ bot.on("ready", () => {
 let counter = 0;
 
 bot.on("messageCreate", (msg) => {
-    if(msg.content.search(/\$[^\$]+\$/) > -1) {
+    if(msg.content.startsWith("!tex")) {
         bot.sendChannelTyping(msg.channel.id);
-        const math = msg.content;
+        const math = msg.content.substr(4);
         mj.typeset({
             math,
             svg: true,
-            format: "inline-TeX"
+            format: "TeX"
         }, (data) => {
             if(!data.error) {
                 const buffer = Buffer.from(data.svg);
-                const file = svg2png.sync(buffer, {
+                svg2png(buffer, {
                     width: Math.floor(parseFloat(data.width) * 10),
                     height: Math.floor(parseFloat(data.height) * 10)
-                });
-                bot.createMessage(msg.channel.id, {
-                    embed: {
-                        title: math,
-                        author: {
-                            name: msg.author.username,
-                            icon_url: msg.author.avatarURL
+                }).then((file) => {
+                    bot.createMessage(msg.channel.id, {
+                        embed: {
+                            title: math,
+                            author: {
+                                name: msg.author.username,
+                                icon_url: msg.author.avatarURL
+                            }
+                        },
+                        tts: false
+                    }, {
+                        file,
+                        name: `tex${++counter}.png`
+                    });
+                }, (e) => {
+                    bot.createMessage(msg.channel.id, {
+                        embed: {
+                            title: "Error while generating image",
+                            description: e.message,
+                            color: 0xff0000
                         }
-                    },
-                    tts: false
-                }, {
-                    file,
-                    name: `tex${++counter}.png`
+                    });
                 });
             }
             else {
