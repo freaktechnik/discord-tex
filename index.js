@@ -11,15 +11,13 @@ mj.config({
     undefinedCharError: false,
     MathJax: {
         tex2jax: {
-            inlineMath: [['$', '$']],
-            displayMath: [['$$', '$$']],
             balanceBraces: true,
             processEscapes: true
         },
         SVG: {
             styles: {
                 "svg": {
-                    background: "white"
+                    "background-color": "white"
                 }
             }
         }
@@ -50,13 +48,6 @@ bot.on("messageCreate", (msg) => {
                     height: Math.floor(parseFloat(data.height) * 10)
                 }).then((file) => {
                     bot.createMessage(msg.channel.id, {
-                        embed: {
-                            title: math,
-                            author: {
-                                name: msg.author.username,
-                                icon_url: msg.author.avatarURL
-                            }
-                        },
                         tts: false
                     }, {
                         file,
